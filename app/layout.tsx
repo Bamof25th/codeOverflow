@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import { ClerkProvider } from "@clerk/nextjs";
+// import ThemeProvider from "@/context/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   description:
     "A community driven platform for asking and answering programmin questions. Get help, share knowledge, and collaborate with developer from around the world. Explore topics in web development, mobile , algorithms, data structures, and more.  ",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/assets/images/site-logo.svg",
   },
 };
 
@@ -30,12 +31,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
+        <ClerkProvider>
+          {/* <ThemeProvider> */}
+            {children}
+
+          {/* </ThemeProvider> */}
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
