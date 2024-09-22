@@ -40,7 +40,7 @@ const Question = ({ mongoUserID }: Props) => {
       tags: [],
     },
   });
- 
+
   // make a async call to  API -> create a question
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
@@ -51,6 +51,7 @@ const Question = ({ mongoUserID }: Props) => {
         content: values.explanation,
         tags: values.tags,
         author: JSON.parse(mongoUserID),
+        path: pathName,
       });
       // navigate to homepage
       router.push("/");

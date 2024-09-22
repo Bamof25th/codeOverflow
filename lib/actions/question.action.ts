@@ -1,10 +1,30 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import Question from "../database/question.model";
 import Tag from "../database/tag.model";
+import User from "../database/user.model";
 import { ConnectToDataBase } from "../mongoose";
+import { CreateQuestionParams, GetQuestionsParams } from "./shared.types";
 
-export async function createQuestion(params: any) {
+//  get questions
+
+export async function getQuestions(params: GetQuestionsParams) {
+  try {
+    ConnectToDataBase();
+    const questions = await Question.find({})
+      .populate({ path: "tags", model: Tag })
+      .populate({ path: "author", model: User })
+      .sort({ createdAt: -1 });
+
+    return { questions };
+  } catch (error) {
+    console.log("error in getting questions :", error);
+    throw error;
+  }
+}
+
+export async function createQuestion(params: CreateQuestionParams) {
   // eslint-disable-next-line
   try {
     // connect to DB
@@ -40,6 +60,7 @@ export async function createQuestion(params: any) {
     // create an interaction record for the  users ask_question action
 
     // Increment authors reputation
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;
