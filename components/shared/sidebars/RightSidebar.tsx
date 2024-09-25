@@ -5,16 +5,16 @@ import RenderTags from "../RenderTags";
 
 const RightSidebar = () => {
   const hotQuestions = [
-    { _id: 1, title: "Is it only me or the font is bolder than necessary?" },
-    { _id: 2, title: "Is it only me or the font is bolder than necessary?" },
-    { _id: 3, title: "Is it only me or the font is bolder than necessary?" },
-    { _id: 4, title: "Is it only me or the font is bolder than necessary?" },
+    { _id: '1', title: "Is it only me or the font is bolder than necessary?" },
+    { _id: '2', title: "Is it only me or the font is bolder than necessary?" },
+    { _id: '3', title: "Is it only me or the font is bolder than necessary?" },
+    { _id: '4', title: "Is it only me or the font is bolder than necessary?" },
   ];
   const popularTags = [
-    { _id: 1, name: "React", totalQuestions: 65 },
-    { _id: 2, name: "Next", totalQuestions: 15 },
-    { _id: 3, name: "Javascript", totalQuestions: 35 },
-    { _id: 4, name: "Angular", totalQuestions: 2 },
+    { _id: '1', name: "React", totalQuestions: 65 },
+    { _id: '2', name: "Next", totalQuestions: 15 },
+    { _id: '3', name: "Javascript", totalQuestions: 35 },
+    { _id: '4', name: "Angular", totalQuestions: 2 },
   ];
 
   return (
