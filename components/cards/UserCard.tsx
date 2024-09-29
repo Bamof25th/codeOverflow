@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
 import RenderTags from "../shared/RenderTags";
-import Tag from "@/lib/database/tag.model";
+
 
 interface Props {
   user: {
