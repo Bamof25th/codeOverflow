@@ -1,6 +1,6 @@
 "use server";
 
-import Tag from "../database/tag.model";
+
 import User from "../database/user.model";
 import { ConnectToDataBase } from "../mongoose";
 import { GetTopInteractedTagsParams } from "./shared.types";
