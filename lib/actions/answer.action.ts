@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import Answer from "../database/answer.model";
 import Question from "../database/question.model";
 import { ConnectToDataBase } from "../mongoose";
-import { CreateAnswerParams } from "./shared.types";
+import { CreateAnswerParams, GetAnswersParams } from "./shared.types";
 
 export const createAnswer = async (params: CreateAnswerParams) => {
   ConnectToDataBase();
@@ -20,6 +20,20 @@ export const createAnswer = async (params: CreateAnswerParams) => {
 
     // TODO : Add interactions
     revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const getAnswers = async (params: GetAnswersParams) => {
+  try {
+    ConnectToDataBase();
+    const { questionId } = params;
+    const answers = await Answer.find({ question: questionId })
+      .populate("author", "_id clerkId name picture")
+      .sort({ createdAt: -1 });
+    return { answers };
   } catch (error) {
     console.log(error);
     throw error;
