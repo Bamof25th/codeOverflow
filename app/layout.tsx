@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import "../styles/prism.css";
 import React from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import ThemeProvider from "@/context/ThemeProvider";
@@ -35,9 +36,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
         <ClerkProvider>
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
+          <ThemeProvider>{children}</ThemeProvider>
         </ClerkProvider>
       </body>
     </html>
