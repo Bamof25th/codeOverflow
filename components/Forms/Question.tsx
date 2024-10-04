@@ -29,7 +29,7 @@ interface Props {
 }
 
 const Question = ({ mongoUserID }: Props) => {
-  const {mode} = useTheme();
+  const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -169,9 +169,9 @@ const Question = ({ mongoUserID }: Props) => {
                       "undo redo | blocks | " +
                       "codesample | bold italic forecolor | alignleft aligncenter " +
                       "alignright alignjustify | bullist numlist ",
-                    content_style: "body { font-family:Inter; font-size:16px }",\
+                    content_style: "body { font-family:Inter; font-size:16px }",
                     skin: mode === "dark" ? "oxide-dark" : "oxide",
-                      content_css: mode === "dark" ? "dark" : " white",
+                    content_css: mode === "dark" ? "dark" : " white",
                   }}
                 />
               </FormControl>
