@@ -9,6 +9,7 @@ import {
   CreateQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
+  QuestionVoteParams,
 } from "./shared.types";
 
 //  get questions
@@ -88,10 +89,78 @@ export async function getQuestionById(params: GetQuestionByIdParams) {
         path: "author",
         model: User,
         select: "_id clerkId name picture",
-      })
-   ;
-
+      });
     return question;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function upVoteQuestion(params: QuestionVoteParams) {
+  try {
+    ConnectToDataBase();
+
+    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+    let updateQuery = {};
+
+    if (hasupVoted) {
+      updateQuery = { $pull: { upvotes: userId } };
+    } else if (hasdownVoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { upvotes: userId } };
+    }
+
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+
+    if (!question) {
+      throw new Error("question not found");
+    }
+
+    // Increment authors Reputation by 10+ for up-voting a question
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function downVoteQuestion(params: QuestionVoteParams) {
+  try {
+    ConnectToDataBase();
+
+    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+    let updateQuery = {};
+
+    if (hasdownVoted) {
+      updateQuery = { $pull: { downvotes: userId } };
+    } else if (hasupVoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { downvotes: userId } };
+    }
+
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+
+    if (!question) {
+      throw new Error("question not found");
+    }
+
+    // Increment authors Reputation by 10+ for up-voting a question
+
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;
