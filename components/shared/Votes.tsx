@@ -1,9 +1,11 @@
 "use client";
 
+import { downVoteAnswer, upVoteAnswer } from "@/lib/actions/answer.action";
 import {
   downVoteQuestion,
   upVoteQuestion,
 } from "@/lib/actions/question.action";
+import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -31,13 +33,19 @@ const Votes = ({
   hasSaved,
 }: Props) => {
   const path = usePathname();
-  const handleSave = () => {};
+  const handleSave = async () => {
+    await toggleSaveQuestion({
+      questionId: JSON.parse(itemId),
+      userId: JSON.parse(userId),
+      path,
+    });
+  };
   const handleVote = async (action: string) => {
     if (!userId) {
       console.log("user id not available");
 
       return;
-    } 
+    }
 
     if (action === "upvote") {
       if (type === "Question") {
@@ -49,13 +57,13 @@ const Votes = ({
           path,
         });
       } else if (type === "Answer") {
-        // await upVoteAnswer({
-        //   questionId: JSON.parse(itemId),
-        //   userId: JSON.parse(userId),
-        //   hasupVoted,
-        //   hasdownVoted,
-        //   path,
-        // });
+        await upVoteAnswer({
+          answerId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasupVoted,
+          hasdownVoted,
+          path,
+        });
       }
       return;
     }
@@ -69,13 +77,13 @@ const Votes = ({
           path,
         });
       } else if (type === "Answer") {
-        // await downVoteAnswer({
-        //   questionId: JSON.parse(itemId),
-        //   userId: JSON.parse(userId),
-        //   hasupVoted,
-        //   hasdownVoted,
-        //   path,
-        // });
+        await downVoteAnswer({
+          answerId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasupVoted,
+          hasdownVoted,
+          path,
+        });
       }
     }
   };
@@ -122,18 +130,20 @@ const Votes = ({
           </div>
         </div>
       </div>
-      <Image
-        src={
-          hasSaved
-            ? `/assets/icons/star-filled.svg`
-            : `/assets/icons/star-red.svg`
-        }
-        width={18}
-        height={18}
-        alt="Star"
-        className="cursor-pointer"
-        onClick={() => handleSave()}
-      />
+      {type === "Question" && (
+        <Image
+          src={
+            hasSaved
+              ? `/assets/icons/star-filled.svg`
+              : `/assets/icons/star-red.svg`
+          }
+          width={18}
+          height={18}
+          alt="Star"
+          className="cursor-pointer"
+          onClick={() => handleSave()}
+        />
+      )}
     </div>
   );
 };
