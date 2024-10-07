@@ -4,13 +4,16 @@ import { revalidatePath } from "next/cache";
 import Question from "../database/question.model";
 import Tag from "../database/tag.model";
 import User from "../database/user.model";
+import Answer from "../database/answer.model";
 import { ConnectToDataBase } from "../mongoose";
 import {
   CreateQuestionParams,
+  DeleteQuestionParams,
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
 } from "./shared.types";
+import Interaction from "../database/interaction.model";
 
 //  get questions
 
@@ -159,6 +162,28 @@ export async function downVoteQuestion(params: QuestionVoteParams) {
     }
 
     // Increment authors Reputation by 10+ for up-voting a question
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function deleteQuestion(params: DeleteQuestionParams) {
+  try {
+    ConnectToDataBase();
+
+    const { questionId, path } = params;
+
+    await Question.deleteOne({ _id: questionId });
+    await Answer.deleteMany({ question: questionId });
+    await Interaction.deleteMany({ question: questionId });
+
+    await Tag.updateMany(
+      { questions: questionId },
+      { $pull: { question: questionId } }
+    );
 
     revalidatePath(path);
   } catch (error) {

@@ -6,8 +6,10 @@ import { ConnectToDataBase } from "../mongoose";
 import {
   AnswerVoteParams,
   CreateAnswerParams,
+  DeleteAnswerParams,
   GetAnswersParams,
 } from "./shared.types";
+import Interaction from "../database/interaction.model";
 
 export const createAnswer = async (params: CreateAnswerParams) => {
   ConnectToDataBase();
@@ -105,6 +107,32 @@ export async function downVoteAnswer(params: AnswerVoteParams) {
     }
 
     // Increment authors Reputation by 10+ for up-voting a question
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function deleteAnswer(params: DeleteAnswerParams) {
+  try {
+    ConnectToDataBase();
+
+    const { answerId, path } = params;
+
+    const answer = await Answer.findById({ _id: answerId });
+
+    if (!answer) {
+      throw new Error("Answer Not Found");
+    }
+
+    await answer.deleteOne({ _id: answerId });
+    await Question.updateMany(
+      { _id: answer.question },
+      { $pull: { answer: answerId } }
+    );
+    await Interaction.deleteMany({ answers: answerId });
 
     revalidatePath(path);
   } catch (error) {
