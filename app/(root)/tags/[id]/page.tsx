@@ -24,7 +24,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
             placeholder={"Search tag questions"}
             iconPosition={"left"}
             imgSrc="/assets/icons/search.svg"
-            route="/"
+            route={`/tags/${params.id}`}
             otherClasses="flex-1"
           />
         </div>
