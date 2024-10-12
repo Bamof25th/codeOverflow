@@ -5,12 +5,13 @@ import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import NoResult from "@/components/shared/NoResult";
 import { IQuestion } from "@/lib/database/question.model";
 import { URLProps } from "@/types";
+import Pagination from "@/components/shared/Pagination";
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const result = await getQuestionsByTagId({
     tagId: params.id,
-    page: 1,
     searchQuery: searchParams.q,
+    page: searchParams.page ? +searchParams.page : 1,
   });
 
   return (
@@ -54,6 +55,12 @@ const Page = async ({ params, searchParams }: URLProps) => {
           )}
         </div>
       </>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result.isNext}
+        />
+      </div>
     </div>
   );
 };
