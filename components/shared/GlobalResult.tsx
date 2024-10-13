@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import GlobalFilters from "./GlobalFilters";
+import { globalSearch } from "@/lib/actions/general.action";
 
 const GlobalResult = () => {
   const searchParams = useSearchParams();
@@ -26,6 +27,11 @@ const GlobalResult = () => {
       setIsLoading(true);
       try {
         // fetch results
+        const res = await globalSearch({
+          query: global,
+          type,
+        });
+        setResult(JSON.parse(res));
       } catch (error) {
         console.log(error);
         throw error;
@@ -33,10 +39,29 @@ const GlobalResult = () => {
         setIsLoading(false);
       }
     };
+
+    if (global) {
+      fetchResult();
+    }
   }, [global, type]);
 
   const renderLink = (type: string, id: string) => {
-    return "/";
+    switch (type) {
+      case "question":
+        return `/question/${id}`;
+
+      case "answer":
+        return `/question/${id}`;
+
+      case "user":
+        return `/profile/${id}`;
+
+      case "tag":
+        return `/tags/${id}`;
+
+      default:
+        return "/";
+    }
   };
 
   return (
@@ -59,7 +84,7 @@ const GlobalResult = () => {
             {result.length > 0 ? (
               result.map((item: any, index: number) => (
                 <Link
-                  href={renderLink("type", "id")}
+                  href={renderLink(item.type, item.id)}
                   key={item.type + item.id + index}
                   className="flex w-full cursor-pointer items-start gap-3 px-5 py-2.5 hover:bg-light-700/50 hover:dark:bg-dark-500/50"
                 >
