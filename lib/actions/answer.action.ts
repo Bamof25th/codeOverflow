@@ -10,6 +10,7 @@ import {
   GetAnswersParams,
 } from "./shared.types";
 import Interaction from "../database/interaction.model";
+import User from "../database/user.model";
 
 export const createAnswer = async (params: CreateAnswerParams) => {
   ConnectToDataBase();
@@ -19,11 +20,20 @@ export const createAnswer = async (params: CreateAnswerParams) => {
     const newAnswer = await Answer.create({ content, author, question });
 
     // Add the answer to the question's answers Array
-    await Question.findByIdAndUpdate(question, {
+    const questionObject = await Question.findByIdAndUpdate(question, {
       $push: { answers: newAnswer._id },
     });
 
     // TODO : Add interactions
+    await Interaction.create({
+      user: author,
+      action: "answer",
+      answer: newAnswer._id,
+      tag: questionObject.tags,
+    });
+    // Increment authors reputation +5
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
+
     revalidatePath(path);
   } catch (error) {
     console.log(error);
@@ -34,6 +44,7 @@ export const createAnswer = async (params: CreateAnswerParams) => {
 export const getAnswers = async (params: GetAnswersParams) => {
   try {
     ConnectToDataBase();
+
     const { questionId, sortBy, page = 1, pageSize = 10 } = params;
     const skipAmount = (page - 1) * pageSize;
 
@@ -63,7 +74,7 @@ export const getAnswers = async (params: GetAnswersParams) => {
       .populate("author", "_id clerkId name picture")
       .sort(sortOptions);
 
-    const totalAnswers = await Answer.countDocuments();
+    const totalAnswers = await Answer.countDocuments({ question: questionId });
     const isNextAnswers = totalAnswers > skipAmount + answers.length;
     return { answers, isNextAnswers };
   } catch (error) {
@@ -98,7 +109,15 @@ export async function upVoteAnswer(params: AnswerVoteParams) {
       throw new Error("answer not found");
     }
 
+    // Increment authors Reputation by +1/-1  for up-voting/revoking an up-vote a answer
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasupVoted ? -2 : 2 },
+    });
+
     // Increment authors Reputation by 10+ for up-voting a answer
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { reputation: hasupVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {
@@ -134,6 +153,15 @@ export async function downVoteAnswer(params: AnswerVoteParams) {
     }
 
     // Increment authors Reputation by 10+ for up-voting a question
+    // Increment authors Reputation by +1/-1  for up-voting/revoking an up-vote a answer
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasdownVoted ? -2 : 2 },
+    });
+
+    // Increment authors Reputation by 10+ for up-voting a answer
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { reputation: hasdownVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {

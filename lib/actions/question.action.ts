@@ -17,8 +17,6 @@ import {
 import Interaction from "../database/interaction.model";
 import { FilterQuery } from "mongoose";
 
-//  get questions
-
 export async function getQuestions(params: GetQuestionsParams) {
   try {
     ConnectToDataBase();
@@ -103,8 +101,14 @@ export async function createQuestion(params: CreateQuestionParams) {
     });
 
     // create an interaction record for the  users ask_question action
-
-    // Increment authors reputation
+    await Interaction.create({
+      user: author,
+      action: "ask-question",
+      question: question._id,
+      tag: tagDocuments,
+    });
+    // Increment authors reputation +5
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
     revalidatePath(path);
   } catch (error) {
     console.log(error);
@@ -162,9 +166,16 @@ export async function upVoteQuestion(params: QuestionVoteParams) {
       throw new Error("question not found");
     }
 
-    // Increment authors Reputation by 10+ for up-voting a question
+    // Increment authors Reputation by +1/-1  for up-voting/revoking an up-vote a question
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasupVoted ? -1 : 1 },
+    });
 
-    revalidatePath(path);
+    //  inc authors reputation by 10
+    await User.findByIdAndUpdate(question.author, {
+      $inc: { reputation: hasupVoted ? -10 : 10 },
+    });
+    await revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;
@@ -198,6 +209,15 @@ export async function downVoteQuestion(params: QuestionVoteParams) {
     }
 
     // Increment authors Reputation by 10+ for up-voting a question
+    // Increment authors Reputation by +1/-1  for up-voting/revoking an up-vote a answer
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasdownVoted ? -2 : 2 },
+    });
+
+    // Increment authors Reputation by 10+ for up-voting a answer
+    await User.findByIdAndUpdate(question.author, {
+      $inc: { reputation: hasdownVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {
