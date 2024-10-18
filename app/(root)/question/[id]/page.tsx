@@ -14,6 +14,7 @@ import Link from "next/link";
 
 const Page = async ({ searchParams, params }: URLProps) => {
   const result = await getQuestionById({ questionId: params.id });
+
   const { userId: clerkId } = auth();
   let mongoUser;
 
@@ -101,7 +102,7 @@ const Page = async ({ searchParams, params }: URLProps) => {
       />
 
       <Answer
-        question={result.content}
+        question={result.title}
         questionId={JSON.stringify(result._id)}
         authorId={JSON.stringify(mongoUser._id)}
       />
