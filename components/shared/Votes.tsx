@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "@/hooks/use-toast";
 import { downVoteAnswer, upVoteAnswer } from "@/lib/actions/answer.action";
 import { viewQuestion } from "@/lib/actions/interaction.action";
 import {
@@ -41,12 +42,20 @@ const Votes = ({
       userId: JSON.parse(userId),
       path,
     });
+
+    return toast({
+      title: `Question ${!hasSaved ? "Saved Successfully in " : "Removed From"} your collection. `,
+      variant: !hasSaved ? "default" : "destructive",
+    });
   };
   const handleVote = async (action: string) => {
     if (!userId) {
       console.log("user id not available");
 
-      return;
+      return toast({
+        title: "Please Login",
+        description: "You must be logged in to perform this action.",
+      });
     }
 
     if (action === "upvote") {
@@ -67,7 +76,10 @@ const Votes = ({
           path,
         });
       }
-      return;
+      return toast({
+        title: `Upvote ${!hasupVoted ? "Successful" : "Removed"}`,
+        variant: !hasupVoted ? "default" : "destructive",
+      });
     }
     if (action === "downvote") {
       if (type === "Question") {
@@ -87,6 +99,10 @@ const Votes = ({
           path,
         });
       }
+      return toast({
+        title: `Down-vote ${!hasdownVoted ? "Successful" : "Removed"}`,
+        variant: !hasdownVoted ? "default" : "destructive",
+      });
     }
   };
 

@@ -21,7 +21,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "CodeOverflow",
   description:
-    "A community driven platform for asking and answering programmin questions. Get help, share knowledge, and collaborate with developer from around the world. Explore topics in web development, mobile , algorithms, data structures, and more.  ",
+    "A community driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developer from around the world. Explore topics in web development, mobile , algorithms, data structures, and more.  ",
   icons: {
     icon: "/assets/images/site-logo.svg",
   },
