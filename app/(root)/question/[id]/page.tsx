@@ -14,10 +14,9 @@ import Link from "next/link";
 
 const Page = async ({ searchParams, params }: URLProps) => {
   const { userId: clerkId } = auth();
-  console.log(clerkId);
-
+  
   let mongoUser;
-
+  
   if (clerkId) {
     mongoUser = await getUserById({ userId: clerkId });
   }
@@ -44,14 +43,14 @@ const Page = async ({ searchParams, params }: URLProps) => {
             </p>
           </Link>
           <div className="flex justify-end">
-          <Votes 
+            <Votes
               type="Question"
               itemId={JSON.stringify(result._id)}
-              userId={JSON.stringify(mongoUser._id)}
+              userId={JSON.stringify(mongoUser?._id)}
               upvotes={result.upvotes.length}
-              hasupVoted={result.upvotes.includes(mongoUser._id)}
+              hasupVoted={result.upvotes.includes(mongoUser?._id)}
               downvotes={result.downvotes.length}
-              hasdownVoted={result.downvotes.includes(mongoUser._id)}
+              hasdownVoted={result.downvotes.includes(mongoUser?._id)}
               hasSaved={mongoUser?.saved.includes(result._id)}
             />
           </div>
@@ -97,7 +96,7 @@ const Page = async ({ searchParams, params }: URLProps) => {
       </div>
       <AllAnswers
         questionId={result._id}
-        userId={mongoUser._id}
+        userId={mongoUser?._id}
         totalAnswers={result.answers.length}
         page={searchParams?.page}
         filter={searchParams?.filter}
@@ -106,7 +105,7 @@ const Page = async ({ searchParams, params }: URLProps) => {
       <Answer
         question={result.title}
         questionId={JSON.stringify(result._id)}
-        authorId={JSON.stringify(mongoUser._id)}
+        authorId={JSON.stringify(mongoUser?._id)}
       />
     </>
   );

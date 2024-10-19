@@ -19,12 +19,12 @@ import Answer from "../database/answer.model";
 import { BadgeCriteriaType } from "@/types";
 import { assignBadges } from "../utils";
 
-export async function getUserById(params: any) {
+export async function getUserById(params: GetUserByIdParams) {
   try {
     ConnectToDataBase();
 
     const { userId } = params;
-
+    
     const user = await User.findOne({ clerkId: userId });
     return user;
   } catch (error) {
