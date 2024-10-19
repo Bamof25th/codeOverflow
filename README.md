@@ -1,10 +1,6 @@
-# Next.js Ultimate Project
+# Next.js Ultimate Project CodeoverFlow 🖼️ Preview
 
-![Next.js Logo](https://nextjs.org/static/images/nextjs-logo.png)
-
-## 🖼️ Preview
-
-![Project Preview](/public/preview.png)
+![Project Preview](https://github.com/Bamof25th/codeOverflow/blob/main/public/assets/preview.png)
 
 ## 🚀 About
 
