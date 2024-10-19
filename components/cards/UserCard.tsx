@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Badge } from "../ui/badge";
 import RenderTags from "../shared/RenderTags";
 
-
 interface Props {
   user: {
     _id: string;
@@ -48,7 +47,9 @@ const UserCard = async ({ user }: Props) => {
               ))}
             </div>
           ) : (
-            <Badge>No tags yet</Badge>
+            <Badge className="small-medium text-dark200_light900">
+              No Tags
+            </Badge>
           )}
         </div>
       </div>
