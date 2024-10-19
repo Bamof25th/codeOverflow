@@ -13,16 +13,17 @@ import Image from "next/image";
 import Link from "next/link";
 
 const Page = async ({ searchParams, params }: URLProps) => {
-  const result = await getQuestionById({ questionId: params.id });
-
   const { userId: clerkId } = auth();
+  console.log(clerkId);
+
   let mongoUser;
 
   if (clerkId) {
     mongoUser = await getUserById({ userId: clerkId });
   }
 
-  
+  const result = await getQuestionById({ questionId: params.id });
+
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -43,7 +44,7 @@ const Page = async ({ searchParams, params }: URLProps) => {
             </p>
           </Link>
           <div className="flex justify-end">
-            <Votes
+          <Votes 
               type="Question"
               itemId={JSON.stringify(result._id)}
               userId={JSON.stringify(mongoUser._id)}

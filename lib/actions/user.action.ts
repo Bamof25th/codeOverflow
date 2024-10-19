@@ -22,6 +22,7 @@ import { assignBadges } from "../utils";
 export async function getUserById(params: any) {
   try {
     ConnectToDataBase();
+
     const { userId } = params;
 
     const user = await User.findOne({ clerkId: userId });

@@ -34,27 +34,27 @@ const Votes = ({
   hasdownVoted,
   hasSaved,
 }: Props) => {
-  const path = usePathname();
+  const pathname = usePathname();
   const router = useRouter();
+
   const handleSave = async () => {
     await toggleSaveQuestion({
-      questionId: JSON.parse(itemId),
       userId: JSON.parse(userId),
-      path,
+      questionId: JSON.parse(itemId),
+      path: pathname,
     });
 
     return toast({
-      title: `Question ${!hasSaved ? "Saved Successfully in " : "Removed From"} your collection. `,
+      title: `Question ${!hasSaved ? "Saved in" : "Removed from"} your collection`,
       variant: !hasSaved ? "default" : "destructive",
     });
   };
+
   const handleVote = async (action: string) => {
     if (!userId) {
-      console.log("user id not available");
-
       return toast({
-        title: "Please Login",
-        description: "You must be logged in to perform this action.",
+        title: "Please log in",
+        description: "You must be logged in to perform this action",
       });
     }
 
@@ -65,7 +65,7 @@ const Votes = ({
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
-          path,
+          path: pathname,
         });
       } else if (type === "Answer") {
         await upVoteAnswer({
@@ -73,14 +73,16 @@ const Votes = ({
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
-          path,
+          path: pathname,
         });
       }
+
       return toast({
         title: `Upvote ${!hasupVoted ? "Successful" : "Removed"}`,
         variant: !hasupVoted ? "default" : "destructive",
       });
     }
+
     if (action === "downvote") {
       if (type === "Question") {
         await downVoteQuestion({
@@ -88,7 +90,7 @@ const Votes = ({
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
-          path,
+          path: pathname,
         });
       } else if (type === "Answer") {
         await downVoteAnswer({
@@ -96,12 +98,13 @@ const Votes = ({
           userId: JSON.parse(userId),
           hasupVoted,
           hasdownVoted,
-          path,
+          path: pathname,
         });
       }
+
       return toast({
-        title: `Down-vote ${!hasdownVoted ? "Successful" : "Removed"}`,
-        variant: !hasdownVoted ? "default" : "destructive",
+        title: `Downvote ${!hasupVoted ? "Successful" : "Removed"}`,
+        variant: !hasupVoted ? "default" : "destructive",
       });
     }
   };
@@ -111,17 +114,17 @@ const Votes = ({
       questionId: JSON.parse(itemId),
       userId: userId ? JSON.parse(userId) : undefined,
     });
-  }, [itemId, userId, path, router]);
+  }, [itemId, userId, pathname, router]);
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-5">
       <div className="flex-center gap-2.5">
         <div className="flex-center gap-1.5">
           <Image
             src={
               hasupVoted
-                ? `/assets/icons/upvoted.svg`
-                : `/assets/icons/upvote.svg`
+                ? "/assets/icons/upvoted.svg"
+                : "/assets/icons/upvote.svg"
             }
             width={18}
             height={18}
@@ -129,18 +132,20 @@ const Votes = ({
             className="cursor-pointer"
             onClick={() => handleVote("upvote")}
           />
+
           <div className="flex-center background-light700_dark400 min-w-[18px] rounded-sm p-1">
             <p className="subtle-medium text-dark400_light900">
               {formatNumber(upvotes)}
             </p>
           </div>
         </div>
+
         <div className="flex-center gap-1.5">
           <Image
             src={
               hasdownVoted
-                ? `/assets/icons/downvoted.svg`
-                : `/assets/icons/downvote.svg`
+                ? "/assets/icons/downvoted.svg"
+                : "/assets/icons/downvote.svg"
             }
             width={18}
             height={18}
@@ -148,6 +153,7 @@ const Votes = ({
             className="cursor-pointer"
             onClick={() => handleVote("downvote")}
           />
+
           <div className="flex-center background-light700_dark400 min-w-[18px] rounded-sm p-1">
             <p className="subtle-medium text-dark400_light900">
               {formatNumber(downvotes)}
@@ -155,18 +161,19 @@ const Votes = ({
           </div>
         </div>
       </div>
+
       {type === "Question" && (
         <Image
           src={
             hasSaved
-              ? `/assets/icons/star-filled.svg`
-              : `/assets/icons/star-red.svg`
+              ? "/assets/icons/star-filled.svg"
+              : "/assets/icons/star-red.svg"
           }
           width={18}
           height={18}
-          alt="Star"
+          alt="star"
           className="cursor-pointer"
-          onClick={() => handleSave()}
+          onClick={handleSave}
         />
       )}
     </div>
