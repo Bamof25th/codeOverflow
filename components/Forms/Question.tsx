@@ -131,7 +131,7 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
               <FormControl className="mt-3.5">
                 <Input
                   {...field}
-                  className="no-focus paragraph-regular background-light700_dark300 min-h-[56px] border"
+                  className="no-focus paragraph-regular background-light700_dark300 text-dark500_light700 min-h-[56px] border"
                 />
               </FormControl>
               <FormDescription className="body-regular mt-2.5 text-light-500">
@@ -213,7 +213,7 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
                   <Input
                     disabled={type === "Edit"}
                     placeholder="Add tags..."
-                    className="no-focus paragraph-regular background-light700_dark300 min-h-[56px] border"
+                    className="no-focus paragraph-regular background-light700_dark300  text-dark500_light700  min-h-[56px] border"
                     onKeyDown={(e) => handelInputKeyDown(e, field)}
                   />
                   {field.value.length > 0 && (
