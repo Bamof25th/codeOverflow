@@ -2,15 +2,15 @@ import Question from "@/components/Forms/Question";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { ParamsProps } from "@/types";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import React from "react";
 
 const Page = async ({ params }: ParamsProps) => {
-  const { userId } = auth();
+  const session = await auth();
 
-  if (!userId) return null;
+  if (!session?.user?.authId) return null;
 
-  const mongoUser = await getUserById({ userId });
+  const mongoUser = await getUserById({ userId: session.user.authId });
   const result = await getQuestionById({ questionId: params.id });
 
   return (

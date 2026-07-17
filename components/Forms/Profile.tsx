@@ -19,11 +19,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { updateUser } from "@/lib/actions/user.action";
 
 interface Props {
-  clerkId: string;
+  authId: string;
   user: string;
 }
 
-const Profile = ({ clerkId, user }: Props) => {
+const Profile = ({ authId, user }: Props) => {
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -45,7 +45,7 @@ const Profile = ({ clerkId, user }: Props) => {
     try {
       //  update user server action
       await updateUser({
-        clerkId,
+        authId,
         updateData: {
           name: values.name,
           username: values.username,

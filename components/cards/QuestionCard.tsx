@@ -2,12 +2,11 @@ import Link from "next/link";
 import RenderTags from "../shared/RenderTags";
 import Metric from "../shared/Metric";
 import { formatNumber, getTimestamp } from "@/lib/utils";
-import { SignedIn } from "@clerk/nextjs";
 import EditDeleteAction from "../shared/EditDeleteAction";
 
 interface QuestionProps {
   _id: string;
-  clerkId?: string | null;
+  authId?: string | null;
   title: string;
   tags: {
     _id: string;
@@ -17,7 +16,7 @@ interface QuestionProps {
     _id: string;
     name: string;
     picture: string;
-    clerkId: string;
+    authId: string;
   };
   upvotes: string[];
   views: number;
@@ -27,7 +26,7 @@ interface QuestionProps {
 
 const QuestionCard = ({
   _id,
-  clerkId,
+  authId,
   title,
   tags,
   author,
@@ -36,7 +35,7 @@ const QuestionCard = ({
   answers,
   createdAt,
 }: QuestionProps) => {
-  const showActionButtons = clerkId && clerkId === author.clerkId;
+  const showActionButtons = authId && authId === author.authId;
 
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
@@ -52,11 +51,9 @@ const QuestionCard = ({
           </Link>
         </div>
 
-        <SignedIn>
-          {showActionButtons && (
-            <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
-          )}
-        </SignedIn>
+        {showActionButtons && (
+          <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
+        )}
       </div>
       <div className="mt-3.5 flex flex-wrap gap-2">
         {tags.map((tag) => (
@@ -69,7 +66,7 @@ const QuestionCard = ({
           alt="user"
           value={author.name}
           title={` • asked ${getTimestamp(createdAt)} `}
-          href={`/profile/${author.clerkId}`}
+          href={`/profile/${author.authId}`}
           isAuthor
           textStyles="body-medium text-dark400_light700"
         />

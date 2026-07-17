@@ -2,11 +2,10 @@ import Link from "next/link";
 
 import Metric from "../shared/Metric";
 import { formatNumber, getTimestamp } from "@/lib/utils";
-import { SignedIn } from "@clerk/nextjs";
 import EditDeleteAction from "../shared/EditDeleteAction";
 
 interface Props {
-  clerkId?: string | null;
+  authId?: string | null;
   _id: string;
   question: {
     _id: string;
@@ -14,7 +13,7 @@ interface Props {
   };
   author: {
     _id: string;
-    clerkId: string;
+    authId: string;
     name: string;
     picture: string;
   };
@@ -23,14 +22,14 @@ interface Props {
 }
 
 const AnswerCard = ({
-  clerkId,
+  authId,
   _id,
   question,
   author,
   upvotes,
   createdAt,
 }: Props) => {
-  const showActionButtons = clerkId && clerkId === author.clerkId;
+  const showActionButtons = authId && authId === author.authId;
 
   return (
     <Link
@@ -47,11 +46,9 @@ const AnswerCard = ({
           </h3>
         </div>
 
-        <SignedIn>
-          {showActionButtons && (
-            <EditDeleteAction type="Answer" itemId={JSON.stringify(_id)} />
-          )}
-        </SignedIn>
+        {showActionButtons && (
+          <EditDeleteAction type="Answer" itemId={JSON.stringify(_id)} />
+        )}
       </div>
 
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
@@ -60,7 +57,7 @@ const AnswerCard = ({
           alt="user avatar"
           value={author.name}
           title={` • asked ${getTimestamp(createdAt)}`}
-          href={`/profile/${author.clerkId}`}
+          href={`/profile/${author.authId}`}
           textStyles="body-medium text-dark400_light700"
           isAuthor
         />

@@ -1,15 +1,54 @@
-import { SignedIn, UserButton } from "@clerk/nextjs";
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { DURATION, EASE, withMotion } from "@/lib/animate";
 import Theme from "./Theme";
 import MobileNav from "./MobileNav";
+import UserButton from "./UserButton";
 import GlobalSearch from "../search/GlobalSearch";
 
 const Navbar = () => {
+  const nav = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      withMotion(() => {
+        gsap
+          .timeline()
+          .from(nav.current, {
+            y: -72,
+            opacity: 0,
+            duration: DURATION,
+            ease: EASE,
+          })
+          .from(
+            ".nav-item",
+            {
+              y: -10,
+              opacity: 0,
+              duration: 0.4,
+              stagger: 0.08,
+              ease: EASE,
+            },
+            "-=0.25"
+          );
+      });
+    },
+    { scope: nav }
+  );
+
   return (
-    <nav className="flex-between background-light900_dark200 fixed z-50 w-full gap-5 p-6 shadow-light-300 dark:shadow-none sm:px-12">
-      <Link href="/" className="flex items-center gap-2">
+    <nav
+      ref={nav}
+      className="flex-between background-light900_dark200 light-border fixed z-50 w-full gap-5 border-b p-6 shadow-light-300 dark:shadow-none sm:px-12"
+    >
+      <Link
+        href="/"
+        className="nav-item flex items-center gap-2 transition-transform duration-200 hover:scale-[1.03]"
+      >
         <Image
           src="/assets/images/site-logo.svg"
           width={23}
@@ -22,20 +61,15 @@ const Navbar = () => {
       </Link>
       <GlobalSearch />
       <div className="flex-between gap-5">
-        <Theme />
-        <SignedIn>
-          <UserButton
-            appearance={{
-              elements: {
-                avatarBox: "h-10 w-10",
-              },
-              variables: {
-                colorPrimary: "#5faee2",
-              },
-            }}
-          />
-        </SignedIn>
-        <MobileNav />
+        <div className="nav-item">
+          <Theme />
+        </div>
+        <div className="nav-item">
+          <UserButton />
+        </div>
+        <div className="nav-item">
+          <MobileNav />
+        </div>
       </div>
     </nav>
   );

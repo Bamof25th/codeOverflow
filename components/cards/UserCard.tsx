@@ -7,7 +7,7 @@ import RenderTags from "../shared/RenderTags";
 interface Props {
   user: {
     _id: string;
-    clerkId: string;
+    authId: string;
     picture: string;
     name: string;
     username: string;
@@ -18,7 +18,7 @@ const UserCard = async ({ user }: Props) => {
   const interactedTags = await getTopInteractedTags({ userId: user._id });
   return (
     <Link
-      href={`/profile/${user.clerkId}`}
+      href={`/profile/${user.authId}`}
       className=" shadow-light100_darknone w-full max-xs:min-w-full xs:w-[260px]"
     >
       <div className="background-light900_dark200 group relative flex size-72 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl from-sky-200 via-orange-200 to-blue-400 text-center before:absolute before:top-0 before:h-24 before:w-72 before:rounded-t-2xl before:bg-gradient-to-bl before:transition-all before:duration-500 before:content-[''] before:hover:h-72 before:hover:w-80 before:hover:scale-95 before:hover:rounded-b-2xl">

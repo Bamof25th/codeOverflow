@@ -8,17 +8,18 @@ import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { formatNumber, getTimestamp } from "@/lib/utils";
 import { URLProps } from "@/types";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import Image from "next/image";
 import Link from "next/link";
 
 const Page = async ({ searchParams, params }: URLProps) => {
-  const { userId: clerkId } = auth();
-  
+  const session = await auth();
+  const authId = session?.user?.authId;
+
   let mongoUser;
-  
-  if (clerkId) {
-    mongoUser = await getUserById({ userId: clerkId });
+
+  if (authId) {
+    mongoUser = await getUserById({ userId: authId });
   }
 
   const result = await getQuestionById({ questionId: params.id });
@@ -28,7 +29,7 @@ const Page = async ({ searchParams, params }: URLProps) => {
       <div className="flex-start w-full flex-col">
         <div className="flex w-full flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
           <Link
-            href={`/profile/${result.author.clerkId}`}
+            href={`/profile/${result.author.authId}`}
             className="flex items-center justify-start gap-1"
           >
             <Image

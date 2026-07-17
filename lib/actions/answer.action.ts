@@ -71,7 +71,7 @@ export const getAnswers = async (params: GetAnswersParams) => {
     const answers = await Answer.find({ question: questionId })
       .skip(skipAmount)
       .limit(pageSize)
-      .populate("author", "_id clerkId name picture")
+      .populate("author", "_id authId name picture")
       .sort(sortOptions);
 
     const totalAnswers = await Answer.countDocuments({ question: questionId });

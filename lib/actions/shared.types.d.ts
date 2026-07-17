@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 
-import { IUser } from "@/mongodb";
+import { IUser } from "@/lib/database/user.model";
 
 // collapse(1:159)
 export interface CreateAnswerParams {
@@ -111,7 +111,7 @@ export interface GetTopInteractedTagsParams {
 }
 
 export interface CreateUserParams {
-  clerkId: string;
+  authId: string;
   name: string;
   username: string;
   email: string;
@@ -130,7 +130,7 @@ export interface GetAllUsersParams {
 }
 
 export interface UpdateUserParams {
-  clerkId: string;
+  authId: string;
   updateData: Partial<IUser>;
   path: string;
 }
@@ -142,7 +142,7 @@ export interface ToggleSaveQuestionParams {
 }
 
 export interface GetSavedQuestionsParams {
-  clerkId: string;
+  authId: string;
   page?: number;
   pageSize?: number;
   filter?: string;
@@ -156,5 +156,5 @@ export interface GetUserStatsParams {
 }
 
 export interface DeleteUserParams {
-  clerkId: string;
+  authId: string;
 }

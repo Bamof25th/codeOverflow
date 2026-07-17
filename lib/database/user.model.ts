@@ -1,8 +1,8 @@
 import { Schema, model, Document, models } from "mongoose";
 
 // Interface to define the shape of the user document
-interface IUser extends Document {
-  clerkId: string;
+export interface IUser extends Document {
+  authId: string;
   name: string;
   username: string;
   email: string;
@@ -17,7 +17,7 @@ interface IUser extends Document {
 }
 
 const UserSchema = new Schema<IUser>({
-  clerkId: { type: String, required: true, unique: true },
+  authId: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },

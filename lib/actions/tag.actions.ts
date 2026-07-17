@@ -17,7 +17,7 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
     ConnectToDataBase();
     const { userId, limit = 3 } = params;
 
-    // Find the user by clerkId
+    // Find the user by their Mongo _id
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("User not found");
@@ -113,7 +113,7 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
-        { path: "author", model: User, select: "_id clerkId name picture" },
+        { path: "author", model: User, select: "_id authId name picture" },
       ],
     });
     const isNext = tag.questions.length > pageSize;

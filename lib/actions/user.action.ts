@@ -25,7 +25,7 @@ export async function getUserById(params: GetUserByIdParams) {
 
     const { userId } = params;
     
-    const user = await User.findOne({ clerkId: userId });
+    const user = await User.findOne({ authId: userId });
     return user;
   } catch (error) {
     console.log(error);
@@ -48,9 +48,9 @@ export async function createUser(userData: CreateUserParams) {
 export async function updateUser(params: UpdateUserParams) {
   try {
     ConnectToDataBase();
-    const { clerkId, updateData, path } = params;
+    const { authId, updateData, path } = params;
     // update user
-    await User.findOneAndUpdate({ clerkId }, updateData, {
+    await User.findOneAndUpdate({ authId }, updateData, {
       new: true,
     });
     revalidatePath(path);
@@ -62,9 +62,9 @@ export async function updateUser(params: UpdateUserParams) {
 export async function deleteUser(params: DeleteUserParams) {
   try {
     ConnectToDataBase();
-    const { clerkId } = params;
+    const { authId } = params;
     // delete User
-    const user = await User.findOneAndDelete({ clerkId });
+    const user = await User.findOneAndDelete({ authId });
     if (!user) {
       throw new Error("user not found");
     }
@@ -176,7 +176,7 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     ConnectToDataBase();
-    const { clerkId, searchQuery, filter, page = 1, pageSize = 20 } = params;
+    const { authId, searchQuery, filter, page = 1, pageSize = 20 } = params;
 
     //  calculating the  amount of posts to be skipped
     const skipAmount = (page - 1) * pageSize;
@@ -208,7 +208,7 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
         break;
     }
 
-    const user = await User.findOne({ clerkId }).populate({
+    const user = await User.findOne({ authId }).populate({
       path: "saved",
       match: query,
       options: {
@@ -218,15 +218,15 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
-        { path: "author", model: User, select: "_id clerkId name picture" },
+        { path: "author", model: User, select: "_id authId name picture" },
       ],
     });
 
-    const isNext = user.saved.length > pageSize;
     if (!user) {
       throw new Error("User not found");
     }
 
+    const isNext = user.saved.length > pageSize;
     const savedQuestions = user.saved;
 
     return { questions: savedQuestions, isNext };
@@ -242,7 +242,7 @@ export async function getUserInfo(params: GetUserByIdParams) {
 
     const { userId } = params;
 
-    const user = await User.findOne({ clerkId: userId });
+    const user = await User.findOne({ authId: userId });
 
     if (!user) {
       throw new Error("user not found");
@@ -334,7 +334,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
       .skip(skipAmount)
       .limit(pageSize)
       .populate("tags", "_id name ")
-      .populate("author", "_id clerkId name picture");
+      .populate("author", "_id authId name picture");
     const isNextQuestions = totalQuestions > skipAmount + userQuestions.length;
 
     return {
@@ -359,7 +359,7 @@ export async function getUserAnswers(params: GetUserStatsParams) {
       .limit(pageSize)
       .sort({ upvotes: -1 })
       .populate("question", "_id title ")
-      .populate("author", "_id clerkId name picture");
+      .populate("author", "_id authId name picture");
     const isNextAnswers = totalAnswers > skipAmount + userAnswers.length;
     return { totalAnswers, answers: userAnswers, isNext: isNextAnswers };
   } catch (error) {

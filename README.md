@@ -16,6 +16,7 @@ This is an advanced Next.js project bootstrapped with [`create-next-app`](https:
 - **Prettier**: Automatic code formatting
 - **API Routes**: Serverless functions for backend functionality
 - **Environment Variables**: Secure configuration management
+- **NextAuth (Auth.js v5)**: Sign in with GitHub
 
 ## 🛠 Prerequisites
 
@@ -48,7 +49,17 @@ Before you begin, ensure you have the following installed:
    cp .env.local.example .env.local
    ```
 
-4. **Run the development server**
+4. **Set up GitHub authentication**
+
+   Register an OAuth app at [github.com/settings/developers](https://github.com/settings/developers) with:
+
+   - Homepage URL: `http://localhost:3000`
+   - Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
+
+   Put the client id and secret in `AUTH_GITHUB_ID` / `AUTH_GITHUB_SECRET`, and
+   generate `AUTH_SECRET` with `npx auth secret`.
+
+5. **Run the development server**
 
    ```bash
    npm run dev
@@ -56,7 +67,7 @@ Before you begin, ensure you have the following installed:
    yarn dev
    ```
 
-5. **Open the application**
+6. **Open the application**
 
    Visit [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 

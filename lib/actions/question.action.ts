@@ -132,7 +132,7 @@ export async function getQuestionById(params: GetQuestionByIdParams) {
       .populate({
         path: "author",
         model: User,
-        select: "_id clerkId name picture",
+        select: "_id authId name picture",
       });
     return question;
   } catch (error) {
@@ -297,7 +297,7 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
     const { userId, page = 1, pageSize = 20, searchQuery } = params;
 
     // find user
-    const user = await User.findOne({ clerkId: userId });
+    const user = await User.findOne({ authId: userId });
 
     if (!user) {
       throw new Error("user not found");
